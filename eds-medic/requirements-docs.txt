@@ -1,0 +1,9 @@
+mike~=1.1.2
+mkdocs-autorefs~=0.4.1
+mkdocs-bibtex~=2.0.3
+mkdocs-gen-files~=0.3.4
+mkdocs-glightbox~=0.1.6
+mkdocs-literate-nav~=0.4.1
+mkdocs-material~=8.2.8
+mkdocstrings~=0.18.1
+mkdocstrings-python~=0.6.6
