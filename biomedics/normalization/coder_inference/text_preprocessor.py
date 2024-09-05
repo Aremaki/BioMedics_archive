@@ -1,17 +1,23 @@
 import re
+from typing import List
 
 from unidecode import unidecode
 
 
 class TextPreprocessor:
-    def __init__(self, cased, stopwords):
+    def __init__(self, cased: bool, stopwords: List[str]):
         self.cased = cased
         self.regex_stopwords = re.compile(
             r"\b(?:" + "|".join(stopwords) + r")\b", re.IGNORECASE
         )
         self.regex_special_characters = re.compile(r"[^a-zA-Z0-9\s]", re.IGNORECASE)
 
-    def normalize(self, txt, remove_stopwords, remove_special_characters):
+    def normalize(
+        self,
+        txt: str,
+        remove_stopwords: bool,
+        remove_special_characters: bool
+    ):
         if not self.cased:
             txt = unidecode(
                 txt.lower()
