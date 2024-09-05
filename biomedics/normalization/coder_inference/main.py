@@ -3,16 +3,22 @@ import pickle
 
 import pandas as pd
 from get_normalization_with_coder import CoderNormalizer
+from omegaconf.dictconfig import DictConfig
 from text_preprocessor import TextPreprocessor
 
 os.environ["OMP_NUM_THREADS"] = "16"
 
-def coder_wrapper(df, config, model_path):
+def coder_wrapper(
+        df: pd.DataFrame,
+        config: DictConfig,
+        model_path: str
+    ):
     # This wrapper is needed to preprocess terms
     # and in case the cells contains list of terms instead of one unique term
     df = df.reset_index(drop=True)
     text_preprocessor = TextPreprocessor(
-        cased=config.coder_cased, stopwords=config.coder_stopwords
+        cased=config.coder_cased,
+        stopwords=config.coder_stopwords
     )
 
     coder_normalizer = CoderNormalizer(
@@ -52,76 +58,52 @@ def coder_wrapper(df, config, model_path):
 
     # Preprocessing and inference on terms
     print("--- Preprocessing terms ---")
-    if isinstance(df[config.column_name_to_normalize].iloc[0], str):
-        coder_data_list = (
-            df[config.column_name_to_normalize]
-            .apply(
-                lambda term: text_preprocessor(
-                    text=term,
-                    remove_stopwords=config.coder_remove_stopwords_terms,
-                    remove_special_characters=config.coder_remove_special_characters_terms,
-                )
+
+    exploded_term_df = (
+        pd.DataFrame(
+            {
+                "id": df.index,
+                config.column_name_to_normalize: df[config.column_name_to_normalize],
+            }
+        )
+        .explode(config.column_name_to_normalize)
+        .reset_index(drop=True)
+    )
+    coder_data_list = (
+        exploded_term_df[config.column_name_to_normalize]
+        .apply(
+            lambda term: text_preprocessor(
+                text=term,
+                remove_stopwords=config.coder_remove_stopwords_terms,
+                remove_special_characters=config.coder_remove_special_characters_terms,
             )
-            .tolist()
         )
-        print("--- CODER inference ---")
-        coder_res = coder_normalizer(
-            umls_labels_list=coder_umls_labels_list,
-            umls_des_list=coder_umls_des_list,
-            data_list=coder_data_list,
-            save_umls_embeddings_dir=config.coder_save_umls_embeddings_dir,
-            save_data_embeddings_dir=config.coder_save_data_embeddings_dir,
-            normalize=config.coder_normalize,
-            summary_method=config.coder_summary_method,
-            tqdm_bar=config.coder_tqdm_bar,
-            coder_batch_size=config.coder_batch_size,
+        .tolist()
+    )
+
+    print("--- CODER inference ---")
+    coder_res = coder_normalizer(
+        umls_labels_list=coder_umls_labels_list,
+        umls_des_list=coder_umls_des_list,
+        data_list=coder_data_list,
+        save_umls_embeddings_dir=config.coder_save_umls_embeddings_dir,
+        save_data_embeddings_dir=config.coder_save_data_embeddings_dir,
+        normalize=config.coder_normalize,
+        summary_method=config.coder_summary_method,
+        tqdm_bar=config.coder_tqdm_bar,
+        coder_batch_size=config.coder_batch_size,
+    )
+    exploded_term_df[
+        ["label", "norm_term", "score"]
+    ] = pd.DataFrame(zip(*coder_res))
+    df = (
+        pd.merge(
+            df.drop(columns=[config.column_name_to_normalize]),
+            exploded_term_df,
+            left_index=True,
+            right_on="id",
         )
-        df[["label", "norm_term", "score"]] = pd.DataFrame(zip(*coder_res))
-    else:
-        exploded_term_df = (
-            pd.DataFrame(
-                {
-                    "id": df.index,
-                    config.column_name_to_normalize: df[config.column_name_to_normalize],
-                }
-            )
-            .explode(config.column_name_to_normalize)
-            .reset_index(drop=True)
-        )
-        coder_data_list = (
-            exploded_term_df[config.column_name_to_normalize]
-            .apply(
-                lambda term: text_preprocessor(
-                    text=term,
-                    remove_stopwords=config.coder_remove_stopwords_terms,
-                    remove_special_characters=config.coder_remove_special_characters_terms,
-                )
-            )
-            .tolist()
-        )
-        print("--- CODER inference ---")
-        coder_res = coder_normalizer(
-            umls_labels_list=coder_umls_labels_list,
-            umls_des_list=coder_umls_des_list,
-            data_list=coder_data_list,
-            save_umls_embeddings_dir=config.coder_save_umls_embeddings_dir,
-            save_data_embeddings_dir=config.coder_save_data_embeddings_dir,
-            normalize=config.coder_normalize,
-            summary_method=config.coder_summary_method,
-            tqdm_bar=config.coder_tqdm_bar,
-            coder_batch_size=config.coder_batch_size,
-        )
-        exploded_term_df[
-            ["label", "norm_term", "score"]
-        ] = pd.DataFrame(zip(*coder_res))
-        df = (
-            pd.merge(
-                df.drop(columns=[config.column_name_to_normalize]),
-                exploded_term_df,
-                left_index=True,
-                right_on="id",
-            )
-            .drop(columns=["id"])
-            .reset_index(drop=True)
-        )
+        .drop(columns=["id"])
+        .reset_index(drop=True)
+    )
     return df
