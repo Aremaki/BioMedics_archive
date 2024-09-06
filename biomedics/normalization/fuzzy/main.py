@@ -1,26 +1,17 @@
-import re
-from collections import defaultdict
-
 import duckdb
-import Levenshtein
-import numpy as np
 import pandas as pd
 import spacy
-from exception import exception_list
-from levenpandas import fuzzymerge
-from sklearn.metrics import f1_score, precision_score, recall_score
-from sklearn.preprocessing import MultiLabelBinarizer
-from tqdm import tqdm
+from edsnlp.connectors import BratConnector
 from unidecode import unidecode
 
-from edsnlp.connectors import BratConnector
+from .exception import exception_list
 
 
 class FuzzyNormaliser:
     def __init__(self, df_path, drug_dict, label_to_normalize, with_qualifiers, method="lev", atc_len=7):
         if df_path.endswith("json"):
             self.df = pd.read_json(df_path)
-            if not "term_to_norm" in self.df.columns:
+            if "term_to_norm" not in self.df.columns:
                 self.df["term_to_norm"] = self.df.term.str.lower().str.strip()
         else:
             self.df = self.gold_generation(df_path, label_to_normalize, with_qualifiers)
@@ -30,7 +21,7 @@ class FuzzyNormaliser:
                 self.unashable_cols.append(col)
                 self.df[col] = self.df[col].astype(str)
         self.df["term_to_norm"] = self.df["term_to_norm"].apply(lambda x: unidecode(x))
-        
+
         if isinstance(drug_dict, dict):
             self.drug_dict = drug_dict
             merged_dict = {}
@@ -60,7 +51,7 @@ class FuzzyNormaliser:
             self.drug_dict = merged_dict
         else:
             self.drug_dict = drug_dict
-            if not "norm_term" in self.df.columns:
+            if "norm_term" not in self.df.columns:
                 self.drug_dict.columns = ["label", "norm_term"]
                 self.drug_dict = self.drug_dict.explode("norm_term")
             self.drug_dict.norm_term = self.drug_dict.norm_term.str.lower().str.strip()
