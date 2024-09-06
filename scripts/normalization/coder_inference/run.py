@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 import pandas as pd
-import spacy
+import edsnlp
 import typer
 from edsnlp.connectors import BratConnector
 from omegaconf import OmegaConf
@@ -32,7 +32,7 @@ def coder_inference_cli(
             df[config.column_name_to_normalize] = df[replacement_col]
             # what if term is not in the columns of the df?
     else:
-        doc_list = BratConnector(input_dir).brat2docs(spacy.blank("eds"))
+        doc_list = BratConnector(input_dir).brat2docs(edsnlp.blank("eds"))
         ents_list = []
         for doc in doc_list:
             if config.label_to_normalize in doc.spans.keys():

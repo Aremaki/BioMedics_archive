@@ -1,5 +1,4 @@
-
-umls_path: /export/home/cse200093/scratch/BioMedics/data/umls/lab_snomed_ct_2021AB.json
+umls_path: /export/home/cse200055/Etienne/BioMedics/data/umls/lab_snomed_ct_2021AB.pkl
 labels_column_name: CUI
 synonyms_column_name: STR
 # res_path: /export/home/cse200093/Jacques_Bio/BioMedics/data/maladie_de_takayasu_norm/res.json

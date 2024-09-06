@@ -2,9 +2,10 @@ import os
 import pickle
 
 import pandas as pd
-from get_normalization_with_coder import CoderNormalizer
 from omegaconf.dictconfig import DictConfig
-from text_preprocessor import TextPreprocessor
+
+from .get_normalization_with_coder import CoderNormalizer
+from .text_preprocessor import TextPreprocessor
 
 os.environ["OMP_NUM_THREADS"] = "16"
 
@@ -29,8 +30,13 @@ def coder_wrapper(
 
     # Preprocess UMLS
     print("--- Preprocessing UMLS ---")
-    umls_df = pd.read_json(config.umls_path)
-
+    if str(config.umls_path).endswith(".json"):
+        umls_df = pd.read_json(config.umls_path)
+    elif str(config.umls_path).endswith(".pkl"):
+        umls_df = pd.read_pickle(config.umls_path)
+    else:
+        raise ValueError("umls_path should be a json or pkl file.")
+    
     umls_df[config.synonyms_column_name] = umls_df[config.synonyms_column_name].apply(
         lambda term: text_preprocessor(
             text=term,
