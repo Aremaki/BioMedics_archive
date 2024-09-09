@@ -27,6 +27,7 @@ python coder_inference/run.py $model_name $input_dir $output_dir $config_path
 
 echo -----------------
 echo NORMALIZE MED LABELS TOTAL APHP DOCS
+
 echo -----------------
 drug_dict_path="/export/home/cse200055/Etienne/BioMedics/data/drug_knowledge/final_dict.pkl"
 output_dir="/export/home/cse200055/Etienne/ai_triomph/data/extracted/drugs_cr_cons_test.json"

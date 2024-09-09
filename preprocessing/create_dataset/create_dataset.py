@@ -1,31 +1,36 @@
+import os
+import sys
+
+import pandas as pd
 import pyspark.sql.functions as F
-from biomedics import BASE_DIR
+from edstoolbox import SparkApp
+from IPython.display import display
 from loguru import logger
 from rich import print
-from edstoolbox import SparkApp
-import sys
-import os
-import pandas as pd
-from IPython.display import display
-import pandas as pd
+
+from biomedics import BASE_DIR
+
 
 # Save txt function
 def save_to_txt(path, txt):
     with open(path, "w") as f:
         print(txt, file=f)
 
-        
 def _get_term_from_c_name(c_name):
     """Extract test name from complete name"""
     return c_name[c_name.index(":") + 1 :].split("_")[0].strip()
 
 def get_docs_df(sql, cim10_list, min_len=1000):
-    '''Get the EHRs with at least one ICD10 code mentionned and one `CRH-HOSPI` or `CRH-S` recorded with at least 1000 characters'''
+    '''
+    Get the EHRs with at least one ICD10 code mentionned and one `CRH-HOSPI` or `CRH-S`
+    recorded with at least 1000 characters.
+    '''
     docs = sql(
-        """SELECT doc.instance_num, doc.observation_blob, doc.encounter_num, doc.patient_num, doc.start_date AS note_date, visit.age_visit_in_years_num, visit.start_date, cim10.concept_cd FROM i2b2_observation_doc AS doc
-                  JOIN i2b2_observation_cim10 AS cim10 ON doc.encounter_num = cim10.encounter_num JOIN i2b2_visit AS visit ON doc.encounter_num = visit.encounter_num
-                  WHERE (doc.concept_cd == 'CR:CRH-HOSPI' OR doc.concept_cd == 'CR:CRH-S')
-                  """
+        """
+        SELECT doc.instance_num, doc.observation_blob, doc.encounter_num, doc.patient_num, doc.start_date AS note_date, visit.age_visit_in_years_num, visit.start_date, cim10.concept_cd FROM i2b2_observation_doc AS doc
+        JOIN i2b2_observation_cim10 AS cim10 ON doc.encounter_num = cim10.encounter_num JOIN i2b2_visit AS visit ON doc.encounter_num = visit.encounter_num
+        WHERE (doc.concept_cd == 'CR:CRH-HOSPI' OR doc.concept_cd == 'CR:CRH-S')
+        """
     )
     ### Filter on cim10_list and export to Pandas
     docs_df = docs.filter(docs.concept_cd.isin(cim10_list)).toPandas().dropna()
@@ -138,7 +143,7 @@ def create_dataset(sql, spark, config):
         docs_all_diseases.append(docs_df)
     summary_df_docs = pd.concat(docs_all_diseases)
     summary_df_docs.to_pickle(BASE_DIR / "data" / "CRH"/ "summary_df_docs.pkl")
-    
+
     # Get structured laboratory tests and save them
     bio_from_structured_data = get_bio_df(sql, spark, summary_df_docs)
     bio_from_structured_data = pd.concat(list(bio_from_structured_data.values()))
@@ -146,7 +151,7 @@ def create_dataset(sql, spark, config):
     if not os.path.exists(bio_result_folder_path):
         os.mkdir(bio_result_folder_path)
     bio_from_structured_data.to_pickle(bio_result_folder_path / "bio_from_structured_data.pkl")
-    
+
     # Get structured drugs and save them
     med_from_structured_data = get_med_df(sql, spark, summary_df_docs)
     med_from_structured_data = pd.concat(list(med_from_structured_data.values()))

@@ -1,9 +1,10 @@
-from tqdm import tqdm
+import os
+
 import pandas as pd
 import typer
 from confection import Config
 from loguru import logger
-from rich import print
+
 
 def filter_bio_structured(config_anabio_codes):
     bio_result_folder_path = BASE_DIR / "data" / "bio_result"
@@ -21,13 +22,13 @@ def filter_bio_structured(config_anabio_codes):
     for disease in config_anabio_codes.keys():
         path_to_res = bio_result_folder_path / disease
         if not os.path.exists(path_to_res):
-            mkdir(path_to_res)
+            os.makedirs(path_to_res)
         filtered_bio[filtered_bio.disease == disease].to_pickle(path_to_res / "filtered_bio_from_structured_data.pkl")
     filtered_bio.to_pickle(bio_result_folder_path / "filtered_bio_from_structured_data.pkl")
-    
+
 def filter_med_structured(config_atc_codes):
     med_result_folder_path = BASE_DIR / "data" / "drug_result"
-    med_from_structured_data = pd.read_pickle(med_result_folder_pat / "med_from_structured_data.pkl")
+    med_from_structured_data = pd.read_pickle(med_result_folder_path / "med_from_structured_data.pkl")
     codes_to_keep = {"disease": [], "valueflag_cd": [], "med": []}
     for disease, atc_codes in config_atc_codes.items():
         for label, code_list in atc_codes.items():
@@ -48,11 +49,11 @@ def filter_med_structured(config_atc_codes):
     for disease in config_atc_codes.keys():
         path_to_res = med_result_folder_path / disease
         if not os.path.exists(path_to_res):
-            mkdir(path_to_res)
+            os.makedirs(path_to_res)
         filtered_med[filtered_med.disease == disease].to_pickle(path_to_res / "filtered_med_from_structured_data.pkl")
     display(filtered_med)
     filtered_med.to_pickle(RES_DRUG_DIR / "filtered_med_from_structured_data.pkl")
-    
+
 def filter_bio_nlp(config_cui_codes):
     # List of df by disease for concatenation
     res_part_filtered_list = []
@@ -84,7 +85,7 @@ def filter_bio_nlp(config_cui_codes):
         res_part_filtered_list.append(res_part_filtered)
     res_filtered_df = pd.concat(res_part_filtered_list)
     res_filtered_df.to_pickle(bio_result_folder_path / "filtered_bio_from_nlp.pkl")
-    
+
 def filter_med_nlp(config_atc_codes):
     # List of df by disease for concatenation
     res_part_filtered_list = []
@@ -117,8 +118,8 @@ def filter_med_nlp(config_atc_codes):
         res_part_filtered_list.append(res_part_filtered)
     res_filtered_df = pd.concat(res_part_filtered_list)
     res_filtered_df.to_pickle(med_result_folder_path / "res_final_filtered.pkl")
-    
-    
+
+
 def main(config_name: str = "config.cfg"):
     # Load config
     config_path = BASE_DIR / "conf" / config_name

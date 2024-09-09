@@ -1,15 +1,25 @@
 import os
+from argparse import ArgumentParser
 from pathlib import Path
 
-import pandas as pd
 import edsnlp
-import typer
+import pandas as pd
+import submitit
 from edsnlp.connectors import BratConnector
 from omegaconf import OmegaConf
 
 from biomedics.normalization.coder_inference.main import coder_wrapper
 
 os.environ["OMP_NUM_THREADS"] = "16"
+
+
+def parse_args():
+    parser = ArgumentParser()
+    parser.add_argument("--model_path", type=Path, required=True, help="Path to the model")
+    parser.add_argument("--input_dir", type=Path, required=True, help="Path to the input directory")
+    parser.add_argument("--output_dir", type=Path, required=True, help="Path to the output directory")
+    parser.add_argument("--config", type=Path, required=True, help="Path to the config file")
+    return parser.parse_args()
 
 def coder_inference_cli(
     model_path: Path,
@@ -58,10 +68,22 @@ def coder_inference_cli(
         )
     df = df[~df[config.column_name_to_normalize].isna()]
     df = coder_wrapper(df, config, model_path)
-    if not os.path.exists(output_dir.parent):
-        os.makedirs(output_dir.parent)
-    df.to_json(output_dir)
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    path_file = output_dir / f"{input_dir.stem}.json"
+    df.to_json(path_file)
 
+
+def main():
+    args = parse_args()
+    executor = submitit.AutoExecutor(folder=args.output_dir)
+    executor.submit(
+        coder_inference_cli,
+        args.model_path,
+        args.input_dir,
+        args.output_dir,
+        args.config,
+    )
 
 if __name__ == "__main__":
-    typer.run(coder_inference_cli)
+    main()

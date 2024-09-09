@@ -1,18 +1,17 @@
 import os
 import re
-
-from loguru import logger
-
 import time
-from datetime import date, datetime, timedelta
-from typing import Union
-import pyarrow.parquet as pq
+
 import databricks.koalas as ks
 import numpy as np
-import pandas as pd
+import pyarrow.parquet as pq
+from loguru import logger
 from pyspark.sql import functions as F
 from pyspark.sql.types import StringType
-from biomedics.extract_measurment.bio_lexical_variant import lexical_var_non_digit_values
+
+from biomedics.extract_measurement.bio_lexical_variant import (
+    lexical_var_non_digit_values,
+)
 from biomedics.utils.extract_pandas_from_brat import extract_pandas
 
 ks.set_option("compute.default_index_type", "distributed")
@@ -118,7 +117,7 @@ def _normalise_unit(unit):
     Normalise units
 
     """
-    
+
     unit_nospace = str(unit).replace(" ", "").lower()
 
     clean_unit_stripped = unit_nospace.strip("-,.¦| ")
@@ -470,13 +469,13 @@ def extract_clean_subsequent_lex_var(df):
 
 def bio_post_processing(spark, script_config, brat_dir, output_dir):
     logger.info('-------------Load entities-------------')
-    
+
     start_t1 = time.time()
-    
+
     label_key = script_config["label_key"]
     labels_to_remove = script_config["labels_to_remove"]
     all_labels = [label_key] + labels_to_remove
-    
+
     df_ents_sparks = convert_brat_to_spark(spark, brat_dir, all_labels)
     df_ents_bio_comp = df_ents_sparks.filter(F.col('label') == label_key)
     df_ents_bio = df_ents_sparks.filter(F.col('label').isin(labels_to_remove))

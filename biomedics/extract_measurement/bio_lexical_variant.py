@@ -14,4 +14,3 @@ lexical_var_non_digit_values = {
     'fluctuante': r"(?i)(fluctuante?s?|fluctuen?t?e?s?|fluctuee?s?)",
     'hemolyse': r"(?i)(hemolysee?s?)",
 }
-
