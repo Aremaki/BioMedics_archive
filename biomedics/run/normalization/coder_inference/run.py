@@ -77,6 +77,15 @@ def coder_inference_cli(
 def main():
     args = parse_args()
     executor = submitit.AutoExecutor(folder=args.output_dir)
+    executor.update_parameters(
+        slurm_job_name="coder_inference",
+        gpus_per_node=1,
+        slurm_partition="gpuV100",
+        slurm_gres="gpu:v100:1",
+        slurm_cpus_per_task=2,
+        slurm_mem_per_cpu=20000,
+        slurm_time=48 * 60 * 60,
+    )
     executor.submit(
         coder_inference_cli,
         args.model_path,
