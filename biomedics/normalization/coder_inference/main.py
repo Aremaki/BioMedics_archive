@@ -34,6 +34,7 @@ def coder_wrapper(
         umls_df = pd.read_json(config.umls_path)
     elif str(config.umls_path).endswith(".pkl"):
         umls_df = pd.read_pickle(config.umls_path)
+        umls_df = umls_df.explode(config.synonyms_column_name)
     else:
         raise ValueError("umls_path should be a json or pkl file.")
     
