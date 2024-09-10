@@ -1,8 +1,10 @@
 import os
 import pickle
+from pathlib import Path
 
 import pandas as pd
 from omegaconf.dictconfig import DictConfig
+from omegaconf.listconfig import ListConfig
 
 from .get_normalization_with_coder import CoderNormalizer
 from .text_preprocessor import TextPreprocessor
@@ -11,8 +13,8 @@ os.environ["OMP_NUM_THREADS"] = "16"
 
 def coder_wrapper(
         df: pd.DataFrame,
-        config: DictConfig,
-        model_path: str
+        config: DictConfig | ListConfig,
+        model_path: str | Path
     ):
     # This wrapper is needed to preprocess terms
     # and in case the cells contains list of terms instead of one unique term

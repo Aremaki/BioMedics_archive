@@ -1,10 +1,9 @@
 import os
-from argparse import ArgumentParser
 from pathlib import Path
 
 import edsnlp
 import pandas as pd
-import submitit
+import typer
 from edsnlp.connectors import BratConnector
 from omegaconf import OmegaConf
 
@@ -13,22 +12,14 @@ from biomedics.normalization.coder_inference.main import coder_wrapper
 os.environ["OMP_NUM_THREADS"] = "16"
 
 
-def parse_args():
-    parser = ArgumentParser()
-    parser.add_argument("--model_path", type=Path, required=True, help="Path to the model")
-    parser.add_argument("--input_dir", type=Path, required=True, help="Path to the input directory")
-    parser.add_argument("--output_dir", type=Path, required=True, help="Path to the output directory")
-    parser.add_argument("--config", type=Path, required=True, help="Path to the config file")
-    return parser.parse_args()
-
 def coder_inference_cli(
     model_path: Path,
     input_dir: Path,
     output_dir: Path,
-    config: Path,
+    config_path: Path,
 ):
     # Load the config file using OmegaConf
-    config = OmegaConf.load(config)
+    config = OmegaConf.load(config_path)
 
     if str(input_dir).endswith(".pkl"):
         df = pd.read_pickle(input_dir)
@@ -74,25 +65,5 @@ def coder_inference_cli(
     df.to_json(path_file)
 
 
-def main():
-    args = parse_args()
-    executor = submitit.AutoExecutor(folder=args.output_dir)
-    executor.update_parameters(
-        slurm_job_name="coder_inference",
-        gpus_per_node=1,
-        slurm_partition="gpuV100",
-        slurm_gres="gpu:v100:1",
-        slurm_cpus_per_task=2,
-        slurm_mem_per_cpu=20000,
-        slurm_time=48 * 60 * 60,
-    )
-    executor.submit(
-        coder_inference_cli,
-        args.model_path,
-        args.input_dir,
-        args.output_dir,
-        args.config,
-    )
-
 if __name__ == "__main__":
-    main()
+    typer.run(coder_inference_cli)

@@ -1,4 +1,5 @@
 import sys
+from pathlib import Path
 
 import torch
 from tqdm import tqdm
@@ -13,8 +14,8 @@ sys.path.append("/export/home/cse200093/scratch/BioMedics/normalisation/training
 class CoderNormalizer:
     def __init__(
         self,
-        model_name_or_path: str,
-        tokenizer_name_or_path: str,
+        model_name_or_path: str | Path,
+        tokenizer_name_or_path: str | Path,
         device: str = "cuda:0",
     ):
         self.device = device
