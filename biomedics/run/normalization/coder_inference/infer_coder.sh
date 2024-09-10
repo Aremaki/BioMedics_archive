@@ -15,23 +15,23 @@ conda deactivate
 
 start_time="$(date -u +%s)"
 input_dir="/export/home/cse200055/brat_data/Etienne/ai_triomph/EDS-biomedic/CONS"
+output_dir="/export/home/cse200055/Etienne/ai_triomph/data/extracted"
 
 echo -----------------
 echo NORMALIZE BIO LABELS TOTAL APHP DOCS
 echo -----------------
 model_name="GanjinZero/coder_all"
-output_dir="/export/home/cse200055/Etienne/ai_triomph/data/extracted/bio_cr_cons_test.json"
 config_path="/export/home/cse200055/Etienne/BioMedics/scripts/normalization/coder_inference/bio_config.yml"
 
-python coder_inference/run.py $model_name $input_dir $output_dir $config_path
+python biomedics/run/normalization/coder_inference/run.py $model_name $input_dir $output_dir $config_path
 
 echo -----------------
 echo NORMALIZE MED LABELS TOTAL APHP DOCS
 
 echo -----------------
 drug_dict_path="/export/home/cse200055/Etienne/BioMedics/data/drug_knowledge/final_dict.pkl"
-output_dir="/export/home/cse200055/Etienne/ai_triomph/data/extracted/drugs_cr_cons_test.json"
-python fuzzy/run.py $drug_dict_path $input_dir $output_dir Chemical_and_drugs True jaro_winkler 0.8
+
+python biomedics/run/normalization/fuzzy/run.py $drug_dict_path $input_dir $output_dir Chemical_and_drugs True jaro_winkler 0.8
 
 end_time="$(date -u +%s)"
 elapsed="$(($end_time-$start_time))"

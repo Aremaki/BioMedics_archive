@@ -18,10 +18,10 @@ def normalize_med_cli(
     method: str,
     threshold: float,
 ):
-
+    print(f"Extracting med entities from {input_dir}")
     drug_dict = pd.read_pickle(drug_dict_path)
     normaliser = FuzzyNormaliser(
-        str(input_dir),
+        input_dir,
         drug_dict,
         label_to_normalize,
         with_qualifiers,
@@ -31,7 +31,10 @@ def normalize_med_cli(
     df = normaliser.normalize(threshold=threshold)
     if not os.path.exists(output_dir.parent):
         os.makedirs(output_dir.parent)
-    df.to_json(output_dir)
+    path_file = output_dir / f"{input_dir.stem}.json"
+    df.to_json(path_file)
+    print(f"Successfully saved the found entities at {path_file}.")
+
 
 if __name__ == "__main__":
     typer.run(normalize_med_cli)

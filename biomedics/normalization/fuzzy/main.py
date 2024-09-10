@@ -87,7 +87,7 @@ class FuzzyNormaliser:
         )
         return df
 
-    def normalize(self, threshold=10):
+    def normalize(self, threshold: int | float = 10):
         for index, row in self.df.iterrows():
             for k, v in exception_list.items():
                 if row["term_to_norm"] in v:
