@@ -19,6 +19,7 @@ def coder_inference_cli(
     config_path: Path,
 ):
     # Load the config file using OmegaConf
+    print(f"Using the config parameters at {config_path}")
     config = OmegaConf.load(config_path)
 
     if str(input_dir).endswith(".pkl"):
@@ -63,6 +64,7 @@ def coder_inference_cli(
         os.makedirs(output_dir)
     path_file = output_dir / f"{input_dir.stem}.json"
     df.to_json(path_file)
+    print(f"Successfully wrote the information found at {path_file}.")
 
 
 if __name__ == "__main__":
