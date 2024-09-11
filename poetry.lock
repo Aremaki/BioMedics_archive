@@ -783,13 +783,13 @@ dev = ["black (==22.6.0)", "pre-commit (>=2.18)", "pytest (==7.1.1)", "pytest-co
 
 [[package]]
 name = "fsspec"
-version = "2022.11.0"
+version = "2022.7.1"
 description = "File-system specification"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "fsspec-2022.11.0-py3-none-any.whl", hash = "sha256:d6e462003e3dcdcb8c7aa84c73a228f8227e72453cd22570e2363e8844edfe7b"},
-    {file = "fsspec-2022.11.0.tar.gz", hash = "sha256:259d5fd5c8e756ff2ea72f42e7613c32667dc2049a4ac3d84364a7ca034acb8b"},
+    {file = "fsspec-2022.7.1-py3-none-any.whl", hash = "sha256:36c5a8e7c4fc20cf32ef6934ac0a122accc8a593ddc8478d30c3ca4dbbd95500"},
+    {file = "fsspec-2022.7.1.tar.gz", hash = "sha256:7f9fb19d811b027b97c4636c6073eb53bc4cbee2d3c4b33fa88b9f26906fd7d7"},
 ]
 
 [package.extras]
@@ -806,7 +806,7 @@ github = ["requests"]
 gs = ["gcsfs"]
 gui = ["panel"]
 hdfs = ["pyarrow (>=1)"]
-http = ["aiohttp (!=4.0.0a0,!=4.0.0a1)", "requests"]
+http = ["aiohttp", "requests"]
 libarchive = ["libarchive-c"]
 oci = ["ocifs"]
 s3 = ["s3fs"]
@@ -1495,21 +1495,21 @@ files = [
 
 [[package]]
 name = "platformdirs"
-version = "4.0.0"
+version = "3.1.1"
 description = "A small Python package for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "platformdirs-4.0.0-py3-none-any.whl", hash = "sha256:118c954d7e949b35437270383a3f2531e99dd93cf7ce4dc8340d3356d30f173b"},
-    {file = "platformdirs-4.0.0.tar.gz", hash = "sha256:cb633b2bcf10c51af60beb0ab06d2f1d69064b43abf4c185ca6b28865f3f9731"},
+    {file = "platformdirs-3.1.1-py3-none-any.whl", hash = "sha256:e5986afb596e4bb5bde29a79ac9061aa955b94fca2399b7aaac4090860920dd8"},
+    {file = "platformdirs-3.1.1.tar.gz", hash = "sha256:024996549ee88ec1a9aa99ff7f8fc819bb59e2c3477b410d90a16d32d6e707aa"},
 ]
 
 [package.dependencies]
-typing-extensions = {version = ">=4.7.1", markers = "python_version < \"3.8\""}
+typing-extensions = {version = ">=4.4", markers = "python_version < \"3.8\""}
 
 [package.extras]
-docs = ["furo (>=2023.7.26)", "proselint (>=0.13)", "sphinx (>=7.1.1)", "sphinx-autodoc-typehints (>=1.24)"]
-test = ["appdirs (==1.4.4)", "covdefaults (>=2.3)", "pytest (>=7.4)", "pytest-cov (>=4.1)", "pytest-mock (>=3.11.1)"]
+docs = ["furo (>=2022.12.7)", "proselint (>=0.13)", "sphinx (>=6.1.3)", "sphinx-autodoc-typehints (>=1.22,!=1.23.4)"]
+test = ["appdirs (==1.4.4)", "covdefaults (>=2.2.2)", "pytest (>=7.2.1)", "pytest-cov (>=4)", "pytest-mock (>=3.10)"]
 
 [[package]]
 name = "pluggy"
@@ -2069,13 +2069,13 @@ six = ">=1.5"
 
 [[package]]
 name = "pytz"
-version = "2024.1"
+version = "2024.2"
 description = "World timezone definitions, modern and historical"
 optional = false
 python-versions = "*"
 files = [
-    {file = "pytz-2024.1-py2.py3-none-any.whl", hash = "sha256:328171f4e3623139da4983451950b28e95ac706e13f3f2630a879749e7a8b319"},
-    {file = "pytz-2024.1.tar.gz", hash = "sha256:2a29735ea9c18baf14b448846bde5a48030ed267578472d8955cd0e7443a9812"},
+    {file = "pytz-2024.2-py2.py3-none-any.whl", hash = "sha256:31c7c1817eb7fae7ca4b8c7ee50c72f93aa2dd863de768e1ef4245d426aa0725"},
+    {file = "pytz-2024.2.tar.gz", hash = "sha256:2aa355083c50a0f93fa581709deac0c9ad65cca8a9e9beac660adcbd493c798a"},
 ]
 
 [[package]]
@@ -2785,32 +2785,45 @@ catalogue = ">=2.0.3,<2.1.0"
 
 [[package]]
 name = "thinc"
-version = "8.2.5"
+version = "8.2.3"
 description = "A refreshing functional take on deep learning, compatible with your favorite libraries"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "thinc-8.2.5-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:dc267f6aad80a681a85f50383afe91da9e2bec56fefdda86bfa2e4f529bef191"},
-    {file = "thinc-8.2.5-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:d80f1e497971c9fa0938f5cc8fe607bbe87356b405fb7bbc3ff9f32fb4eed3bb"},
-    {file = "thinc-8.2.5-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:0933adbd3e65e30d3bef903e77a368bc8a41bed34b0d18df6d4fc0536908e21f"},
-    {file = "thinc-8.2.5-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:54bac2ba23b208fdaf267cd6113d26a5ecbb3b0e0c6015dff784ae6a9c5e78ca"},
-    {file = "thinc-8.2.5-cp310-cp310-win_amd64.whl", hash = "sha256:399260197ef3f8d9600315fc5b5a1d5940400fceb0361de642e9fe3506d82385"},
-    {file = "thinc-8.2.5-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:a75c0de3340afed594beda293661de145f3842873df56d9989bc338148f13fab"},
-    {file = "thinc-8.2.5-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:6b166d1a22003ee03bc236370fff2884744c1fb758a6209a2512d305773d07d7"},
-    {file = "thinc-8.2.5-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:34db8a023b9f70645fdf06c510584ba6d8b97ec53c1e094f42d95652bf8c875f"},
-    {file = "thinc-8.2.5-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:8901b30db1071ea8d5e4437429c8632535bf5ed87938ce3bb5057bed9f15aed8"},
-    {file = "thinc-8.2.5-cp311-cp311-win_amd64.whl", hash = "sha256:8ef5d46d62e31f2450224ab22391a606cf427b13e20cfc570f70422e2f333872"},
-    {file = "thinc-8.2.5-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:9fc26697e2358c71a5fe243d52e98ae67ee1a3b314eead5031845b6d1c0d121c"},
-    {file = "thinc-8.2.5-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:8e299d4dc41107385d6d14d8604a060825798a031cabe2b894b22f9d75d9eaad"},
-    {file = "thinc-8.2.5-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:e8a8f2f249f2be9a5ce2a81a6efe7503b68be7b57e47ad54ab28204e1f0c723b"},
-    {file = "thinc-8.2.5-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:87e729f33c76ec6df9b375989743252ab880d79f3a2b4175169b21dece90f102"},
-    {file = "thinc-8.2.5-cp312-cp312-win_amd64.whl", hash = "sha256:c5f750ea2dd32ca6d46947025dacfc0f6037340c4e5f7adb9af84c75f65aa7d8"},
-    {file = "thinc-8.2.5-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:bb97e2f699a3df16112ef5460cbfb0c9189a5fbc0e76bcf170ed7d995bdce367"},
-    {file = "thinc-8.2.5-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:5c78fb218273894168d1ca2dd3a20f28dba5a7fa698c4f2a2fc425eda2086cfc"},
-    {file = "thinc-8.2.5-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:cdc27da534807a2addd1c3d2a3d19f99e3eb67fdbce81c21f4e4c8bfa94ac15b"},
-    {file = "thinc-8.2.5-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:5b884e56eaeb9e5c7bfeb1c8810a3cbad19a599b33b9f3152b90b67f468471ac"},
-    {file = "thinc-8.2.5-cp39-cp39-win_amd64.whl", hash = "sha256:df2138cf379061017ecb8bf609a8857e7904709ef0a9a2252783c16f67a2b749"},
-    {file = "thinc-8.2.5.tar.gz", hash = "sha256:c2963791c934cc7fbd8f9b942d571cac79892ad11630bfca690a868c32752b75"},
+    {file = "thinc-8.2.3-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:27950dc8a14e1ead09dec329ad98edf1b8f7cc71ec9d5ce5f301073de9d7dadf"},
+    {file = "thinc-8.2.3-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:fce09571619f344983f915f5deb5b8346304b56d3a9ae1bc5ac8c5872eee0738"},
+    {file = "thinc-8.2.3-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:ce0fb4e534c978ff4b429678ab28db2f81503549f97ed61b2b752c07c08b2083"},
+    {file = "thinc-8.2.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:607223c178ae5fba36a3b35fa82d94a453694551bcfbe7f9ac04a01a9e87ebad"},
+    {file = "thinc-8.2.3-cp310-cp310-win_amd64.whl", hash = "sha256:53b48a6ae43b0e4054816a378163237b1d2120a49c71994682037437d64b7f84"},
+    {file = "thinc-8.2.3-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:9db67f460dae2e3aada1ff166394ce13c2dabb4db93d6bd79cd256f5beab9599"},
+    {file = "thinc-8.2.3-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:0d57bdf43e0acd1406d681bf988179f677cf1b385c86f744bf314d827383ce31"},
+    {file = "thinc-8.2.3-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:78311a593b8bf3f03af52bf71d6b364463c598f3540ea8387c00017d2a0e0a5d"},
+    {file = "thinc-8.2.3-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b9489ae7fec427064a50a0c3e7c661a95251756032e31316add2c8c13f98f93c"},
+    {file = "thinc-8.2.3-cp311-cp311-win_amd64.whl", hash = "sha256:d0bf3840d434e3dbdf294643e6d54d2042d0e652abc68dee16673f28269fc456"},
+    {file = "thinc-8.2.3-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:bb7c64d0cb8066c47af9441cd611e89a0e2b28b85f2fffbdec791724c81e1915"},
+    {file = "thinc-8.2.3-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:c11ab3236e56311568f1e84099bfbeea3a4ee2434758a32982b224ddf8bad9c5"},
+    {file = "thinc-8.2.3-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:d0a7f29ad534b6e761ee24d0c9e7402447e8ed4e772922795f77c98d88d7f99c"},
+    {file = "thinc-8.2.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:2817bde75c92f98fee747efdbebca68d16158b808401c5a922ba54a5f2619e9b"},
+    {file = "thinc-8.2.3-cp312-cp312-win_amd64.whl", hash = "sha256:a336f8cae7374d1768a52e63a5084a1208e30b8761eede113d2703e43e7839f1"},
+    {file = "thinc-8.2.3-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:45c1a2880329eae53da1d77a4898b7fd30faad445b28fdf92c5557dbf6492ff0"},
+    {file = "thinc-8.2.3-cp36-cp36m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:5c899b25442ed915bc77fa4cf07e908dea1bccab7c4b8d854cc0b261026d6a06"},
+    {file = "thinc-8.2.3-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:83a6b46d5f0accf0c2b2e5ff05b1bffd4d99721513b6d0374574009b0aab292c"},
+    {file = "thinc-8.2.3-cp36-cp36m-win_amd64.whl", hash = "sha256:9a29a9ca7a5060c923866f16ba7823a4540cfd708eafa7202ee89ac029e0b78b"},
+    {file = "thinc-8.2.3-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:bd25b781faae71c52ba053157ab1865f4163be1a6485e70a007855a037ba060f"},
+    {file = "thinc-8.2.3-cp37-cp37m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:f01a7107c36c4fc60b60fdbda30d76a0ac9bc8f4f9c7f6872db62250e2f836a5"},
+    {file = "thinc-8.2.3-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:aa65182424efda03be9359c3540928bf2985792f89826a76ee475c7c6b2ec64f"},
+    {file = "thinc-8.2.3-cp37-cp37m-win_amd64.whl", hash = "sha256:4d448c8a870f594125cbfadc91024ce67683eae5698207101d2ea4793ab222a1"},
+    {file = "thinc-8.2.3-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:97605421b898441733fda24c6dda74a85325fbeebc808176857b0a8e6e7a9d47"},
+    {file = "thinc-8.2.3-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:8b0309d14bcfdad24b1e8bb87f8b245acfd7eb5305be466c284c788adf026ffa"},
+    {file = "thinc-8.2.3-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:aead20abe233adade3c37daeb9d08e5429dfcada81856b1f2b1b7e4a67a671a0"},
+    {file = "thinc-8.2.3-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:324e5d2c98f787d82d239cf33cee425e1c11e34a3c96cb3f4e1ee5661abef50c"},
+    {file = "thinc-8.2.3-cp38-cp38-win_amd64.whl", hash = "sha256:45e6416e56d5101d0557e31cd06235d80fc89e9ac455ef1b444c440cb3c1ce64"},
+    {file = "thinc-8.2.3-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:5e6ebf63a185d7691b38655a184e30554fbe589805a802d97230eed07af8ea39"},
+    {file = "thinc-8.2.3-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:4d29ee871cfd0d40f4a0436e154640c0965b163b91a088a85bcd5658c1cc3ed4"},
+    {file = "thinc-8.2.3-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:a8709d114131680bc7c02b0c97817bd7692eda50beb7849c7908666cf15a6cfd"},
+    {file = "thinc-8.2.3-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:d9b81e3c1e89c8ed6dff5a8440f584cda623ec77a3bd8c0ed059936405b8a7ca"},
+    {file = "thinc-8.2.3-cp39-cp39-win_amd64.whl", hash = "sha256:1df983af74952d4818703e6bac8af64fad338eaaef8b017fa05d372e3c68e577"},
+    {file = "thinc-8.2.3.tar.gz", hash = "sha256:f5afc5222912a80bda8bdcec958362a2ba538d7027dc8db6154845d2859dca76"},
 ]
 
 [package.dependencies]
@@ -2819,13 +2832,13 @@ catalogue = ">=2.0.4,<2.1.0"
 confection = ">=0.0.1,<1.0.0"
 cymem = ">=2.0.2,<2.1.0"
 murmurhash = ">=1.0.2,<1.1.0"
-numpy = {version = ">=1.15.0,<2.0.0", markers = "python_version < \"3.9\""}
+numpy = {version = ">=1.15.0", markers = "python_version < \"3.9\""}
 packaging = ">=20.0"
 preshed = ">=3.0.2,<3.1.0"
 pydantic = ">=1.7.4,<1.8 || >1.8,<1.8.1 || >1.8.1,<3.0.0"
 setuptools = "*"
 srsly = ">=2.4.0,<3.0.0"
-typing-extensions = {version = ">=3.7.4.1,<5.0.0", markers = "python_version < \"3.8\""}
+typing-extensions = {version = ">=3.7.4.1,<4.5.0", markers = "python_version < \"3.8\""}
 wasabi = ">=0.8.1,<1.2.0"
 
 [package.extras]
@@ -3153,13 +3166,13 @@ test = ["black (>=22.3.0,<23.0.0)", "coverage (>=5.2,<6.0)", "isort (>=5.0.6,<6.
 
 [[package]]
 name = "typing-extensions"
-version = "4.7.1"
+version = "4.4.0"
 description = "Backported and Experimental Type Hints for Python 3.7+"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "typing_extensions-4.7.1-py3-none-any.whl", hash = "sha256:440d5dd3af93b060174bf433bccd69b0babc3b15b1a8dca43789fd7f61514b36"},
-    {file = "typing_extensions-4.7.1.tar.gz", hash = "sha256:b75ddc264f0ba5615db7ba217daeb99701ad295353c45f9e95963337ceeeffb2"},
+    {file = "typing_extensions-4.4.0-py3-none-any.whl", hash = "sha256:16fa4864408f655d35ec496218b85f79b3437c829e93320c7c9215ccfd92489e"},
+    {file = "typing_extensions-4.4.0.tar.gz", hash = "sha256:1511434bb92bf8dd198c12b1cc812e800d4181cfcb867674e0f8279cc93087aa"},
 ]
 
 [[package]]
@@ -3215,24 +3228,24 @@ zstd = ["zstandard (>=0.18.0)"]
 
 [[package]]
 name = "virtualenv"
-version = "20.26.4"
+version = "20.21.1"
 description = "Virtual Python Environment builder"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "virtualenv-20.26.4-py3-none-any.whl", hash = "sha256:48f2695d9809277003f30776d155615ffc11328e6a0a8c1f0ec80188d7874a55"},
-    {file = "virtualenv-20.26.4.tar.gz", hash = "sha256:c17f4e0f3e6036e9f26700446f85c76ab11df65ff6d8a9cbfad9f71aabfcf23c"},
+    {file = "virtualenv-20.21.1-py3-none-any.whl", hash = "sha256:09ddbe1af0c8ed2bb4d6ed226b9e6415718ad18aef9fa0ba023d96b7a8356049"},
+    {file = "virtualenv-20.21.1.tar.gz", hash = "sha256:4c104ccde994f8b108163cf9ba58f3d11511d9403de87fb9b4f52bf33dbc8668"},
 ]
 
 [package.dependencies]
-distlib = ">=0.3.7,<1"
-filelock = ">=3.12.2,<4"
-importlib-metadata = {version = ">=6.6", markers = "python_version < \"3.8\""}
-platformdirs = ">=3.9.1,<5"
+distlib = ">=0.3.6,<1"
+filelock = ">=3.4.1,<4"
+importlib-metadata = {version = ">=4.8.3", markers = "python_version < \"3.8\""}
+platformdirs = ">=2.4,<4"
 
 [package.extras]
-docs = ["furo (>=2023.7.26)", "proselint (>=0.13)", "sphinx (>=7.1.2,!=7.3)", "sphinx-argparse (>=0.4)", "sphinxcontrib-towncrier (>=0.2.1a0)", "towncrier (>=23.6)"]
-test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess (>=1)", "flaky (>=3.7)", "packaging (>=23.1)", "pytest (>=7.4)", "pytest-env (>=0.8.2)", "pytest-freezer (>=0.4.8)", "pytest-mock (>=3.11.1)", "pytest-randomly (>=3.12)", "pytest-timeout (>=2.1)", "setuptools (>=68)", "time-machine (>=2.10)"]
+docs = ["furo (>=2023.3.27)", "proselint (>=0.13)", "sphinx (>=6.1.3)", "sphinx-argparse (>=0.4)", "sphinxcontrib-towncrier (>=0.2.1a0)", "towncrier (>=22.12)"]
+test = ["covdefaults (>=2.3)", "coverage (>=7.2.3)", "coverage-enable-subprocess (>=1)", "flaky (>=3.7)", "packaging (>=23.1)", "pytest (>=7.3.1)", "pytest-env (>=0.8.1)", "pytest-freezegun (>=0.4.2)", "pytest-mock (>=3.10)", "pytest-randomly (>=3.12)", "pytest-timeout (>=2.1)"]
 
 [[package]]
 name = "wasabi"
@@ -3528,4 +3541,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">3.7.6,<3.8.0"
-content-hash = "8014d9583bddc272e1b5ae65784ee30d7f2f6d83fcd9028b212e3de8cb283f8c"
+content-hash = "f5564a6b55c15c6e8aa2a72aad69d61dd71759add73e2cb8d018fc5723b6b4e5"
