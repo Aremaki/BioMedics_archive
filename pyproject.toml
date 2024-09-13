@@ -24,6 +24,7 @@ thinc = "8.2.3"
 pathspec = "0.9.0"
 omegaconf = "^2.3.0"
 duckdb = "^1.0.0"
+spacy = "3.7.5"
 
 [tool.poetry.group.dev.dependencies]
 dvc = { version = "^2.37.0", markers = "python_version >= '3.8'" }
