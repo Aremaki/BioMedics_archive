@@ -1,6 +1,7 @@
 import os
 import pickle
 from pathlib import Path
+from typing import Union
 
 import pandas as pd
 from omegaconf.dictconfig import DictConfig
@@ -13,8 +14,8 @@ os.environ["OMP_NUM_THREADS"] = "16"
 
 def coder_wrapper(
         df: pd.DataFrame,
-        config: DictConfig | ListConfig,
-        model_path: str | Path
+        config: Union[DictConfig, ListConfig],
+        model_path: Union[str, Path]
     ):
     # This wrapper is needed to preprocess terms
     # and in case the cells contains list of terms instead of one unique term
