@@ -11,7 +11,7 @@ from .exception import exception_list
 
 class FuzzyNormaliser:
     def __init__(self, df_path, drug_dict, label_to_normalize, with_qualifiers, method="lev", atc_len=7):
-        if df_path.endswith("json"):
+        if str(df_path).endswith("json"):
             self.df = pd.read_json(df_path)
             if "term_to_norm" not in self.df.columns:
                 self.df["term_to_norm"] = self.df.term.str.lower().str.strip()

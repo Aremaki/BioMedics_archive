@@ -31,7 +31,7 @@ def normalize_med_cli(
     df = normaliser.normalize(threshold=threshold)
     if not os.path.exists(output_dir.parent):
         os.makedirs(output_dir.parent)
-    path_file = output_dir / f"{input_dir.stem}.json"
+    path_file = output_dir / f"{input_dir.stem}_{drug_dict_path.stem}.json"
     df.to_json(path_file)
     print(f"Successfully saved the found entities at {path_file}.")
 

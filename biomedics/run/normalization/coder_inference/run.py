@@ -62,7 +62,9 @@ def coder_inference_cli(
     df = coder_wrapper(df, config, model_path)
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
-    path_file = output_dir / f"{input_dir.stem}.json"
+    
+    name_config = str(config_path.stem)
+    path_file = output_dir / f"{input_dir.stem}_{name_config}.json"
     df.to_json(path_file)
     print(f"Successfully wrote the information found at {path_file}.")
 
