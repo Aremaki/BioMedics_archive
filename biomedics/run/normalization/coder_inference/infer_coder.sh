@@ -30,7 +30,7 @@ python biomedics/run/normalization/coder_inference/run.py $model_name $input_dir
 echo -----------------
 echo NORMALIZE MED LABELS TOTAL APHP DOCS
 echo -----------------
-drug_dict_path="data/drug_knowledge/final_dict.pkl"
+drug_dict_path="data/drug_knowledge/aiT_dict.pkl"
 
 python biomedics/run/normalization/fuzzy/run.py $drug_dict_path $input_dir $output_dir Chemical_and_drugs True jaro_winkler 0.8
 

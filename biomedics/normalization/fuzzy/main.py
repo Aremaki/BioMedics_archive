@@ -4,7 +4,7 @@ from typing import Union
 
 import duckdb
 import pandas as pd
-import spacy
+import edsnlp
 from edsnlp.connectors import BratConnector
 from unidecode import unidecode
 
@@ -76,7 +76,7 @@ class FuzzyNormalizer:
         Generate a dataframe from a brat folder with qualifiers within the list below.
         """
         qualifiers = ["Temporality", "Certainty", "Action", "Negation"]
-        doc_list = BratConnector(df_path).brat2docs(spacy.blank("eds"))
+        doc_list = BratConnector(df_path).brat2docs(edsnlp.blank("eds"))
         ents_list = []
         for doc in doc_list:
             if label_to_normalize in doc.spans.keys():
@@ -86,7 +86,7 @@ class FuzzyNormalizer:
                     ent_data = [
                         ent.text,
                         doc._.note_id + ".ann",
-                        [ent.start_char, ent.end_char],
+                        (ent.start_char, ent.end_char),
                         ent.text.lower().strip(),
                     ]
                     if with_qualifiers:
@@ -118,7 +118,7 @@ class FuzzyNormalizer:
         elif method == "lev":
             df_2 = self.drug_dict.copy()
             merged_df = duckdb.query(
-                "select *, levenshtein(df.term_to_norm, df_2.norm_term) score" \
+                "select *, levenshtein(df.term_to_norm, df_2.norm_term) score " \
                 f"from df, df_2 where score < {threshold}"
             ).to_df()
             merged_df["term_to_norm_len"] = merged_df.term_to_norm.str.len()
@@ -147,9 +147,13 @@ class FuzzyNormalizer:
         elif method == "jaro_winkler":
             df_2 = self.drug_dict.copy()  # noqa: F841
             merged_df = duckdb.query(
-                "select *, jaro_winkler_similarity(df.term_to_norm, df_2.norm_term) score" \
+                "select *, jaro_winkler_similarity(df.term_to_norm, df_2.norm_term) score " \
                 f"from df, df_2 where score > {threshold}"
             ).to_df()
+            
+            merged_df["span_converted"] = merged_df["span_converted"].apply(tuple)
+            merged_df["Negation"] = merged_df["Negation"].apply(lambda x: x=="True")
+            
             idx = (
                 merged_df.groupby(["source", "span_converted"])[
                     "score"
@@ -160,6 +164,7 @@ class FuzzyNormalizer:
             merged_df = df.merge(merged_df, on=list(df.columns), how="left")
             df = merged_df
 
+
         else:
             raise ValueError("""The Method selected is not implemented.
             The value should be among: 'exact', 'lev' or 'jaro_winkler'.""")
@@ -169,6 +174,6 @@ class FuzzyNormalizer:
         ).agg({"label": list, "norm_term": set}) # type: ignore
 
         for col in self.unashable_cols:
-            self.df[col] = self.df[col].apply(lambda x: eval(x))
-        return self.df
+            df[col] = df[col].apply(lambda x: eval(x))
+        return df
 

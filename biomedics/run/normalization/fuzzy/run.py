@@ -4,7 +4,7 @@ from pathlib import Path
 import pandas as pd
 import typer
 
-from biomedics.normalization.fuzzy.main import FuzzyNormalizer
+from biomedics.normalization.fuzzy import FuzzyNormalizer
 
 os.environ["OMP_NUM_THREADS"] = "16"
 
@@ -20,14 +20,14 @@ def normalize_med_cli(
 ):
     print(f"Extracting med entities from {input_dir}")
     drug_dict = pd.read_pickle(drug_dict_path)
-    normaliser = FuzzyNormalizer(
+    normalizer = FuzzyNormalizer(
         input_dir,
         drug_dict,
         label_to_normalize,
         with_qualifiers,
         atc_len=7,
     )
-    df = normaliser.normalize(method=method, threshold=threshold)
+    df = normalizer.normalize(method=method, threshold=threshold)
     if not os.path.exists(output_dir.parent):
         os.makedirs(output_dir.parent)
     path_file = output_dir / f"{input_dir.stem}_{drug_dict_path.stem}.json"
