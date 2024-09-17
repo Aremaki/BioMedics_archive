@@ -25,10 +25,9 @@ def normalize_med_cli(
         drug_dict,
         label_to_normalize,
         with_qualifiers,
-        method=method,
         atc_len=7,
     )
-    df = normaliser.normalize(threshold=threshold)
+    df = normaliser.normalize(method=method, threshold=threshold)
     if not os.path.exists(output_dir.parent):
         os.makedirs(output_dir.parent)
     path_file = output_dir / f"{input_dir.stem}_{drug_dict_path.stem}.json"
