@@ -11,7 +11,7 @@ from unidecode import unidecode
 from .exception import exception_list
 
 
-class FuzzyNormaliser:
+class FuzzyNormalizer:
     def __init__(
         self,
         df_path: Union[str, Path],
@@ -37,7 +37,7 @@ class FuzzyNormaliser:
         self.df["term_to_norm"] = self.df["term_to_norm"].apply(lambda x: unidecode(x))
 
         self.drug_dict = self._make_drug_dict(drug_dict, atc_len)
-        self.method = method
+
 
     def _make_drug_dict(self, drug_dict, atc_len)->pd.DataFrame:
         if isinstance(drug_dict, dict):
@@ -111,7 +111,9 @@ class FuzzyNormaliser:
                     df.at[index, "term_to_norm"] = k
 
         if method == "exact":
-            df = df.merge(self.drug_dict, how="left", left_on="term_to_norm", right_on="norm_term")
+            df = df.merge(
+                self.drug_dict, how="left", left_on="term_to_norm", right_on="norm_term"
+            )
 
         elif method == "lev":
             df_2 = self.drug_dict.copy()
@@ -143,7 +145,7 @@ class FuzzyNormaliser:
             df = merged_df
 
         elif method == "jaro_winkler":
-            df_2 = self.drug_dict.copy()
+            df_2 = self.drug_dict.copy()  # noqa: F841
             merged_df = duckdb.query(
                 "select *, jaro_winkler_similarity(df.term_to_norm, df_2.norm_term) score" \
                 f"from df, df_2 where score > {threshold}"
@@ -159,11 +161,12 @@ class FuzzyNormaliser:
             df = merged_df
 
         else:
-            raise ValueError("The Method selected is not implemented. The value should be among: 'exact', 'lev' or 'jaro_winkler'.")
+            raise ValueError("""The Method selected is not implemented.
+            The value should be among: 'exact', 'lev' or 'jaro_winkler'.""")
 
         df = df.groupby(
-            list(df.columns.difference({"label", "norm_term"})), as_index=False, dropna=False
-        ).agg({"label": list, "norm_term": set})
+            list(df.columns.difference({"label", "norm_term"})), as_index=False, dropna=False  # noqa: E501 # type: ignore
+        ).agg({"label": list, "norm_term": set}) # type: ignore
 
         for col in self.unashable_cols:
             self.df[col] = self.df[col].apply(lambda x: eval(x))
