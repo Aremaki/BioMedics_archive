@@ -3,8 +3,8 @@ from pathlib import Path
 from typing import Union
 
 import duckdb
-import pandas as pd
 import edsnlp
+import pandas as pd
 from edsnlp.connectors import BratConnector
 from unidecode import unidecode
 

@@ -2,7 +2,6 @@ import os
 import re
 import time
 
-import databricks.koalas as ks
 import numpy as np
 import pyarrow.parquet as pq
 from loguru import logger
@@ -13,8 +12,6 @@ from biomedics.extract_measurement.bio_lexical_variant import (
     lexical_var_non_digit_values,
 )
 from biomedics.utils.extract_pandas_from_brat import extract_pandas
-
-ks.set_option("compute.default_index_type", "distributed")
 
 
 def _clean_lexical_variant(lex_var):
@@ -166,10 +163,12 @@ def convert_brat_to_spark(spark, brat_dir, labels):
 
 def match_bio_to_biocomp(df_bio, df_biocomp):
     """
-    Match bio to biocomp entities retrieved from the EDS-Biomedic model and clean the lexical variants for pollution
-
+    Match bio to biocomp entities retrieved from the EDS-Biomedic model and clean the
+    lexical variants for pollution.
     """
-    df_biocomp = df_biocomp.withColumnRenamed("lexical_variant", "lexical_variant_biocomp")
+    df_biocomp = df_biocomp.withColumnRenamed(
+        "lexical_variant", "lexical_variant_biocomp"
+    )
     df_biocomp = df_biocomp.withColumnRenamed("term", "term_biocomp")
 
     for column in df_bio.columns:
@@ -190,14 +189,17 @@ def match_bio_to_biocomp(df_bio, df_biocomp):
         F.regexp_replace("lexical_variant_biocomp", pattern_ellipse, ' '),
     )
     df_biocomp_bio = df_biocomp_bio.withColumn(
-        "lexical_variant_bio", F.regexp_replace("lexical_variant_bio", pattern_ellipse, ' ')
+        "lexical_variant_bio",
+        F.regexp_replace("lexical_variant_bio", pattern_ellipse, ' ')
     )
 
     df_biocomp_bio = df_biocomp_bio.withColumn(
-        "lexical_variant_biocomp", F.regexp_replace("lexical_variant_biocomp", '…', ' ')
+        "lexical_variant_biocomp",
+        F.regexp_replace("lexical_variant_biocomp", '…', ' ')
     )
     df_biocomp_bio = df_biocomp_bio.withColumn(
-        "lexical_variant_bio", F.regexp_replace("lexical_variant_bio", '…', ' ')
+        "lexical_variant_bio",
+        F.regexp_replace("lexical_variant_bio", '…', ' ')
     )
     df_biocomp_bio = df_biocomp_bio.withColumn(
         "lexical_variant_biocomp",
@@ -213,7 +215,8 @@ def match_bio_to_biocomp(df_bio, df_biocomp):
 def match_date_pattern(df):
     """
     Return date if identified in the lexical_variant.
-    If a date format is identified it is assigned to a new column `extracted_date` and remove the date in the lexical_variant
+    If a date format is identified it is assigned to a new column `extracted_date`
+    and remove the date in the lexical_variant.
     """
     date_pattern = r"(\d{2}/20\d{2}|\d{2}/\d{2}|20\d{2}-\d{2}-\d{2}|20\d{2}-\d{2}|20\d{2})"
 
@@ -231,7 +234,8 @@ def match_date_pattern(df):
 def extract_clean_range_value(df):
     """
     Return range value if identified in the lexical_variant.
-    If a range value format is identified it is assigned to a new column `range_value` and removed in the lexical_variant
+    If a range value format is identified it is assigned to a new column `range_value`
+    and removed in the lexical_variant.
     """
 
     pattern_range_value = r"([|¦][<>]\d+[\.,]?\d*$|\(\s?[nN]?\s?:?\s?[<>]\s?\d+[\.\,]?\d*\s?\)?|\(?\s?[nN]?\s?[:=]?\s?\d+[\.,]?\d*\s?[\-–]\s?\d+[\.,]?\d*\s?\)?)"
@@ -298,7 +302,8 @@ def clean_lexical_variant(df):
 def extract_clean_non_digit_value(df):
     """
     Return non digit value if identified in the lexical_variant.
-    If a non digit value format is identified it is assigned to a new column `non_digit_value` and removed in the lexical_variant
+    If a non digit value format is identified it is assigned to a new column
+    `non_digit_value` and removed in the lexical_variant.
     """
 
     replace_lexical_var_udf = F.udf(_replace_lexical_var, StringType())
@@ -320,7 +325,7 @@ def extract_clean_non_digit_value(df):
         "lexical_variant_stripped",
         F.regexp_replace("lexical_variant_stripped", pattern_non_digit_val, " "),
     )
-    
+
     df_non_digit_val = df_non_digit_val.withColumn(
         "non_digit_value",
         F.when(F.col("non_digit_value") == "", None).otherwise(F.col("non_digit_value")),
@@ -331,7 +336,8 @@ def extract_clean_non_digit_value(df):
 def extract_clean_units(df):
     """
     Return unit if identified in the lexical_variant.
-    If a unit format is identified it is assigned to a new column `unit` and removed in the lexical_variant
+    If a unit format is identified it is assigned to a new column `unit` and removed in
+    the lexical_variant.
     """
     clean_units_udf = F.udf(_clean_unit, StringType())
     df = df.withColumn("lexical_variant_stripped", clean_units_udf(df["lexical_variant_stripped"]))
@@ -360,7 +366,7 @@ def extract_clean_units(df):
 
     normalise_units_udf = F.udf(_normalise_unit, StringType())
     df_units = df_units.withColumn("unit", normalise_units_udf(df_units["unit"]))
-    
+
     df_units = df_units.withColumn(
         "unit",
         F.when(F.col("unit") == "", None).otherwise(F.col("unit")),
@@ -495,11 +501,13 @@ def bio_post_processing(spark, script_config, brat_dir, output_dir):
     end_t2 = time.time()
 
     logger.info(
-        f"Biocomp linked with bio table len:  {df_biocomp_bio.count()} entities \nprocessed in {round(end_t2 - start_t2,3)} secs"
+        f"""Biocomp linked with bio table len:  {df_biocomp_bio.count()} entities
+        processed in {round(end_t2 - start_t2,3)} secs"""
     )
 
     logger.info('-------------Remove bio from bio_comp-------------')
     start_t3 = time.time()
+    # remove entities in the lexical_variant_biocom col that are like the lexical_variant_bio col
     df_biocomp_bio = df_biocomp_bio.withColumn(
         "lexical_variant_stripped",
         F.expr("trim(replace(lexical_variant_biocomp, lexical_variant_bio, ' '))"),
@@ -558,7 +566,7 @@ def bio_post_processing(spark, script_config, brat_dir, output_dir):
         f"Dataframe shape after processing: {df_biocomp_bio_clean.count()}\
     \nNumber of unique note_id in the initial df : {df_biocomp_bio.select('source').distinct().count()}, after processing: {df_biocomp_bio_clean.select('source').distinct().count()}"
     )
-    
+
     logger.info('---------------Select columns of interest and convert to Pandas---------------')
     df_final = df_biocomp_bio_clean.select(
         'source',
@@ -580,7 +588,8 @@ def bio_post_processing(spark, script_config, brat_dir, output_dir):
     logger.info('---------------Convert to Pandas---------------')
 
     # Try using pyarrow via HDFS to convert object to pandas as it is way faster.
-    parquet_path = f"hdfs://bbsedsi/user/cse200093/temp.parquet"
+    user = os.environ["USER"]
+    parquet_path = f"hdfs://bbsedsi/user/{user}/temp.parquet"
     df_final.write.mode("overwrite").parquet(parquet_path)
     df_final = pq.read_table(parquet_path)
     df_final = df_final.to_pandas()
