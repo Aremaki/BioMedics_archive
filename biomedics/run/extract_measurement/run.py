@@ -1,20 +1,19 @@
-import configparser
 from typing import Any, Dict, List
 
 import typer
+from omegaconf import OmegaConf
 
 from biomedics.extract_measurement.main import main as bio_post_processing
 
 
 def run(config_path: str):
     """
-    Run the bio post-processing with configuration from a .cfg file.
+    Run the bio post-processing with configuration from a .yaml file.
 
     Args:
-        config (str): Path to the .cfg configuration file.
+        config (str): Path to the .yaml configuration file.
     """
-    config = configparser.ConfigParser()
-    config.read(config_path)
+    config = OmegaConf.load(config_path)
 
     script_config: Dict[str, Any] = config["script"] # type: ignore
     brat_dirs: List[str] = script_config["brat_dirs"]
