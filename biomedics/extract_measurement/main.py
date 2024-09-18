@@ -24,7 +24,7 @@ def main(script_config: Dict[str, Any], brat_dir: str, output_dir: str):
 
     label_key = script_config["label_key"]
     labels_to_remove = script_config["labels_to_remove"]
-    all_labels = [label_key] + labels_to_remove
+    all_labels = [label_key] + list(labels_to_remove)
 
     df_ents = convert_brat_to_pandas(brat_dir, all_labels)
     df_ents_bio_comp = df_ents[df_ents["label"] == label_key]

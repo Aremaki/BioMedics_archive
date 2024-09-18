@@ -157,8 +157,7 @@ def convert_brat_to_pandas(brat_dir: str, labels: List[str]) -> pd.DataFrame:
     df = df[df["label"].isin(labels)].drop_duplicates()
 
     df[['span_start', 'span_end']] = df['span'].apply(_convert_brat_spans).tolist()
-
-    df = df.rename(columns={"term": "lexical_variant"})
+    df["lexical_variant"] = df["term"].copy()
 
     df_final = df[[
         "term",
