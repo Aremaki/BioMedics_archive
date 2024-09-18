@@ -191,7 +191,8 @@ def match_bio_to_biocomp(
     df_biocomp_bio = pd.merge(
         df_biocomp,
         df_bio,
-        on="source",
+        left_on="source",
+        right_on="source_bio",
         how="left"
     ).drop_duplicates()
     df_biocomp_bio =  df_biocomp_bio[
