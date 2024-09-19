@@ -32,9 +32,9 @@ def main(script_config: Dict[str, Any], brat_dir: str, output_dir: str):
     end_t1 = time.time()
 
     logger.info(
-        f"Biocomp table len:  {df_ents_bio_comp.count()} entities\
+        f"Biocomp table len:  {len(df_ents_bio_comp)} entities\
      {df_ents_bio_comp.source.nunique()} docs\
-     \nBio table len: {df_ents_bio.count()}\
+     \nBio table len: {len(df_ents_bio)}\
      {df_ents_bio.source.nunique()} docs\
      \nProcessed in {round(end_t1 - start_t1,3)} secs"
     )
@@ -45,7 +45,7 @@ def main(script_config: Dict[str, Any], brat_dir: str, output_dir: str):
     end_t2 = time.time()
 
     logger.info(
-        f"""Biocomp linked with bio table len:  {df_biocomp_bio.count()} entities
+        f"""Biocomp linked with bio table len:  {len(df_biocomp_bio)} entities
         processed in {round(end_t2 - start_t2,3)} secs"""
     )
 
