@@ -91,7 +91,7 @@ def extract_ents_from_folder(
     return df_ents
 
 def main(
-    root: Union[str, pd.DataFrame],
+    root: str,
     output_path: Optional[str] = None,
 ) -> pd.DataFrame:
     nlp = eds_biomedic()
