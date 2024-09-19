@@ -1,13 +1,10 @@
 import os
-from functools import partial
 from typing import List, Optional, Union
 
 import edsnlp
 import pandas as pd
 import typer
 from spacy.tokens import Doc
-
-from biomedics.ner.loaders import eds_biomedic
 
 
 def convert_doc_to_dict(doc: Doc, attributes: Optional[List[str]] = None) -> List[dict]:
@@ -74,16 +71,17 @@ def build_data(
 
     return data
 
-def extract_ents_from_folder(
-    root: Union[str, pd.DataFrame],
+def extract_ents_from_docs(
+    docs,
     nlp: edsnlp.Pipeline,
     attributes: Optional[List[str]] = None
 ) -> pd.DataFrame:
 
-    docs = build_data(root)
     docs = docs.map_pipeline(nlp)
 
-    converter_with_attributes = partial(convert_doc_to_dict, attributes=attributes)
+    def converter_with_attributes(doc: Doc):
+        return convert_doc_to_dict(doc, attributes=attributes)
+
     df_ents = edsnlp.data.to_pandas( # type: ignore
         docs,
         converter=converter_with_attributes,
@@ -95,8 +93,15 @@ def main(
     root: str,
     output_path: Optional[str] = None,
 ) -> pd.DataFrame:
-    nlp = eds_biomedic()
-    df_ents = extract_ents_from_folder(root, nlp)
+    try:
+        from biomedics.ner.loaders import eds_biomedic
+        nlp = eds_biomedic()
+    except ImportError:
+        print("EDS-Biomedic not found, using default model")
+        nlp = edsnlp.blank("fr")
+
+    docs = build_data(root)
+    df_ents = extract_ents_from_docs(docs, nlp)
     if output_path:
         df_ents.to_parquet(
             output_path + ".parquet",
