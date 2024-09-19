@@ -97,7 +97,12 @@ def main(
     nlp = eds_biomedic()
     df_ents = extract_ents_from_folder(root, nlp)
     if output_path:
-        df_ents.to_pickle(output_path)
+        df_ents.to_parquet(
+            output_path + ".parquet",
+            mode="overwrite",
+            engine="pyarrow",
+            compression="snappy"
+        )
 
     return df_ents
 

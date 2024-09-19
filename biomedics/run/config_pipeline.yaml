@@ -1,0 +1,5 @@
+ner:
+  brat_dirs: 
+    - /export/home/cse200055/brat_data/Etienne/ai_triomph/EDS-biomedic/RCP
+  output_dirs: 
+    - /export/home/cse200055/Etienne/ai_triomph/data/extracted/RCP
