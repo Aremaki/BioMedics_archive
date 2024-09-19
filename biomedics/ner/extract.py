@@ -7,7 +7,7 @@ import pandas as pd
 import typer
 from spacy.tokens import Doc
 
-from .loaders import eds_biomedic
+from biomedics.ner.loaders import eds_biomedic
 
 
 def convert_doc_to_dict(doc: Doc, attributes: Optional[List[str]] = None) -> List[dict]:
