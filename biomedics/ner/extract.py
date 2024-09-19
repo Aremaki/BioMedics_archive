@@ -22,18 +22,21 @@ def convert_doc_to_dict(doc: Doc, attributes: Optional[List[str]] = None) -> Lis
         }}
         for e in doc.ents
     ]
-    spans = [
-        {**{
-            "note_id": doc._.note_id,
-            "lexical_variant": s.text,
-            "label": "BIO",
-            "start": s.start,
-            "end": s.end,
-        }, **{
-            attr: getattr(s._, attr) for attr in attributes
-        }}
-        for s in doc.spans["BIO"]
-    ]
+    if "BIO" in doc.spans:
+        spans = [
+            {**{
+                "note_id": doc._.note_id,
+                "lexical_variant": s.text,
+                "label": "BIO",
+                "start": s.start,
+                "end": s.end,
+            }, **{
+                attr: getattr(s._, attr) for attr in attributes
+            }}
+            for s in doc.spans["BIO"]
+        ]
+    else:
+        spans = []
     return ents + spans
 
 def build_data(
