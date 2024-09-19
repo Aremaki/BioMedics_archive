@@ -85,6 +85,7 @@ def extract_ents_from_folder(
 
     converter_with_attributes = partial(convert_doc_to_dict, attributes=attributes)
     df_ents = edsnlp.data.to_pandas( # type: ignore
+        docs,
         converter=converter_with_attributes,
     )
 
