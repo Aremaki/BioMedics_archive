@@ -9,10 +9,13 @@
 #SBATCH --error=/export/home/cse200055/Etienne/ai_triomph/log/slurm-%x-%j-stderr.log
 #SBATCH --container-image /scratch/images/sparkhadoop.sqsh  --container-mounts=/export/home/$USER:/export/home/$USER,/data/scratch/$USER:/data/scratch/$USER --container-mount-home --container-writable
 
+nvidia-smi
+
 source $HOME/.user_conda/miniconda/etc/profile.d/conda.sh # appel de ce script
 cd "/export/home/cse200055/Etienne/BioMedics"
 source "env/bin/activate"
 conda deactivate
+pip install cupy
 echo "Python used: $(which python)"
 
 start_time="$(date -u +%s)"
