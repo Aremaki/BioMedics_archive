@@ -84,13 +84,13 @@ def extract_ents_from_docs(
 
     docs = docs.map_pipeline(nlp)
 
-    # if torch.cuda.is_available():
-    #     print("Using GPU")
-    #     docs = docs.set_processing(
-    #         num_cpu_workers=10,
-    #         num_gpu_workers=2,
-    #         batch_size=1000,
-    #     )
+    if torch.cuda.is_available():
+        print("Using GPU")
+        docs = docs.set_processing(
+            num_cpu_workers=4,
+            num_gpu_workers=1,
+            batch_size=32,
+        )
 
     def converter_with_attributes(doc: Doc):
         return convert_doc_to_dict(doc, attributes=attributes)
@@ -119,7 +119,15 @@ def main(
         nlp = edsnlp.blank("fr")
 
     docs = build_data(root)
-    df_ents = extract_ents_from_docs(docs, nlp)
+    basic_attributes = [
+        "Negation",
+        "Certainty",
+        "Family",
+        "Action",
+        "Temporality",
+        "Allergy"
+    ]
+    df_ents = extract_ents_from_docs(docs, nlp, basic_attributes)
     if output_path:
         df_ents.to_parquet(
             output_path + ".parquet",
