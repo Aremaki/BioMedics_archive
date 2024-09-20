@@ -240,10 +240,14 @@ def extract_clean_range_value(df: pd.DataFrame) -> pd.DataFrame:
     df_range_val["range_value"] = df_range_val["range_value"].str.replace(
         r"[^\d><\-–\.,]", "", regex=True
     )
+    # Split the range into min and max
+    split_range = df_range_val["range_value"].str.split(r"[\-–]", expand=True)
+    df_range_val["range_min"] = split_range[0].replace(",", ".")
+    df_range_val["range_max"] = split_range[1].replace(",", ".")
 
-    df_range_val["range_value"] = df_range_val["range_value"].replace(
-        "", np.nan
-    ).astype(float)
+    # Convert range min and max to numeric, coercing errors to NaN
+    df_range_val["range_min"] = pd.to_numeric(df_range_val["range_min"], errors="coerce")
+    df_range_val["range_max"] = pd.to_numeric(df_range_val["range_max"], errors="coerce")
 
     return df_range_val
 
