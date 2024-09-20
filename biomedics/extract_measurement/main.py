@@ -96,16 +96,15 @@ def main(script_config: Dict[str, Any], brat_dir: str, output_dir: str):
 
     logger.info('-------------Remove bio from bio_comp-------------')
     start_t3 = time.time()
-    # remove entities in the lexical_variant_biocom col that are like the
-    # lexical_variant_bio col
-    df_biocomp_bio["lexical_variant_stripped"] = (
-        df_biocomp_bio["lexical_variant_biocomp"]
-        .str.replace(df_biocomp_bio["lexical_variant_bio"], " ") # type: ignore
-        .str.strip()
+
+    # Remove values in 'lexical_variant_biocomp' that are in 'lexical_variant_bio'
+    df_biocomp_bio["lexical_variant_stripped"] = df_biocomp_bio.apply(
+        lambda row: row["lexical_variant_biocomp"].replace(row["lexical_variant_bio"], "").strip(),
+        axis=1
     )
-    df_biocomp_bio["lexical_variant_stripped"] = (
-        df_biocomp_bio["lexical_variant_stripped"]
-        .str.replace(r"G\/+[lL]\b", "x10*9/l")
+
+    df_biocomp_bio["lexical_variant_stripped"] = df_biocomp_bio["lexical_variant_stripped"].str.replace(
+        r"G\/+[lL]\b", "x10*9/l", regex=True
     )
 
     end_t3 = time.time()
