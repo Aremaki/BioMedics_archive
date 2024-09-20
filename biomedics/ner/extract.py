@@ -125,7 +125,6 @@ def main(
         "Family",
         "Action",
         "Temporality",
-        "Allergy"
     ]
     df_ents = extract_ents_from_docs(docs, nlp, basic_attributes)
     if output_path:
