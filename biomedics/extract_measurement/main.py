@@ -31,16 +31,17 @@ def load_data(data_path: str, labels: List[str]) -> pd.DataFrame:
     """
     if os.path.isdir(data_path):
         df = extract_pandas(IN_BRAT_DIR=data_path)
+        df[['span_start', 'span_end']] = df['span'].apply(_convert_brat_spans).tolist()
+
     elif data_path.endswith(".csv"):
         df = pd.read_csv(data_path)
     elif data_path.endswith(".parquet"):
         df = pd.read_parquet(data_path)
+        df = df.rename(columns={'start': 'span_start', 'end': 'span_end'})
     else:
         raise ValueError(f"Invalid data path: {data_path}")
 
     df = df[df["label"].isin(labels)].drop_duplicates()
-
-    df[['span_start', 'span_end']] = df['span'].apply(_convert_brat_spans).tolist()
     df["lexical_variant"] = df["term"].copy()
 
     df_final = df[[
