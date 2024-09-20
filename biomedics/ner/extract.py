@@ -127,7 +127,12 @@ def main(
         "Temporality",
     ]
     df_ents = extract_ents_from_docs(docs, nlp, basic_attributes)
-    df_ents[basic_attributes] = df_ents[basic_attributes].fillna(False)
+    df_ents[basic_attributes] = (
+        df_ents[basic_attributes]
+        .fillna(False)
+        .replace('nan', False)
+        .astype(bool)
+    )
     if output_path:
         df_ents.to_parquet(
             output_path + ".parquet",
