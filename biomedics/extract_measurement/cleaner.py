@@ -311,17 +311,12 @@ def extract_clean_non_digit_value(df: pd.DataFrame) -> pd.DataFrame:
         .apply(_replace_lexical_var)
     )
 
-    # Modify each individual pattern to be non-capturing
-    non_capturing_patterns = [f"(?:{pattern})" for pattern in lexical_var_non_digit_values.values()]
-    pattern_non_digit_val = '|'.join(non_capturing_patterns)
-
-    # Wrap the entire pattern in a single capturing group
-    regex_pattern = f'({pattern_non_digit_val})'
+    pattern_non_digit_val = '|'.join(lexical_var_non_digit_values.values())
 
     df_non_digit_val["non_digit_value"] = df_non_digit_val[
         "lexical_variant_stripped"
     ].str.extract(
-        regex_pattern,
+        f"({pattern_non_digit_val})",
         expand=False
     )
     df_non_digit_val["non_digit_value"] = df_non_digit_val[
@@ -330,7 +325,7 @@ def extract_clean_non_digit_value(df: pd.DataFrame) -> pd.DataFrame:
     df_non_digit_val["lexical_variant_stripped"] = df_non_digit_val[
         "lexical_variant_stripped"
     ].str.replace(
-        regex_pattern,
+        '(' + pattern_non_digit_val + ')',
         " ",
         regex=True
     )
