@@ -22,7 +22,7 @@ start_time="$(date -u +%s)"
 input_dir="/export/home/cse200055/brat_data/Etienne/ai_triomph/EDS-biomedic/CONS"
 output_path="/export/home/cse200055/Etienne/ai_triomph/data/extracted/CONS_ents"
 
-python biomedics/ner/extract.py $input_dir $output_path
+python biomedics/ner/extract.py $input_dir --output-path $output_path
 
 end_time="$(date -u +%s)"
 elapsed="$(($end_time-$start_time))"
