@@ -1,12 +1,13 @@
 import os
 import time
-from typing import Any, Dict
+from typing import Any, Dict, List
 
+import pandas as pd
 from loguru import logger
 
 from biomedics.extract_measurement.cleaner import (
+    _convert_brat_spans,
     clean_lexical_variant,
-    convert_brat_to_pandas,
     extract_clean_non_digit_value,
     extract_clean_range_value,
     extract_clean_subsequent_lex_var,
@@ -15,6 +16,43 @@ from biomedics.extract_measurement.cleaner import (
     match_bio_to_biocomp,
     match_date_pattern,
 )
+from biomedics.utils.extract_pandas_from_brat import extract_pandas
+
+
+def load_data(data_path: str, labels: List[str]) -> pd.DataFrame:
+    """
+    Load data from a path and convert to a pandas dataframe.
+    Accepts .ann files or .csv files or .parquet files.
+    Args:
+        data_path (str): Path to the data.
+        labels (List[str]): List of labels to filter.
+    Returns:
+        pd.DataFrame: Dataframe with the data.
+    """
+    if os.path.isdir(data_path):
+        df = extract_pandas(IN_BRAT_DIR=data_path)
+    elif data_path.endswith(".csv"):
+        df = pd.read_csv(data_path)
+    elif data_path.endswith(".parquet"):
+        df = pd.read_parquet(data_path)
+    else:
+        raise ValueError(f"Invalid data path: {data_path}")
+
+    df = df[df["label"].isin(labels)].drop_duplicates()
+
+    df[['span_start', 'span_end']] = df['span'].apply(_convert_brat_spans).tolist()
+    df["lexical_variant"] = df["term"].copy()
+
+    df_final = df[[
+        "term",
+        "lexical_variant",
+        "source",
+        "span_start",
+        "span_end",
+        "label"
+    ]]
+
+    return df_final
 
 
 def main(script_config: Dict[str, Any], brat_dir: str, output_dir: str):
@@ -26,7 +64,7 @@ def main(script_config: Dict[str, Any], brat_dir: str, output_dir: str):
     labels_to_remove = script_config["labels_to_remove"]
     all_labels = [label_key] + list(labels_to_remove)
 
-    df_ents = convert_brat_to_pandas(brat_dir, all_labels)
+    df_ents = load_data(brat_dir, all_labels)
     df_ents_bio_comp = df_ents[df_ents["label"] == label_key]
     df_ents_bio = df_ents[df_ents["label"].isin(labels_to_remove)]
     end_t1 = time.time()

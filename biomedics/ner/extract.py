@@ -110,7 +110,7 @@ def main(
         from biomedics.ner.loaders import eds_biomedic
         if torch.cuda.is_available():
             print("Using GPU")
-            spacy.require_gpu()
+            spacy.require_gpu() # type: ignore
 
         print("Using EDS-Biomedic")
         nlp = eds_biomedic()

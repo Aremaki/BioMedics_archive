@@ -7,7 +7,6 @@ import pandas as pd
 from biomedics.extract_measurement.bio_lexical_variant import (
     lexical_var_non_digit_values,
 )
-from biomedics.utils.extract_pandas_from_brat import extract_pandas
 
 
 def _clean_lexical_variant(lex_var: Any) -> str:
@@ -146,30 +145,6 @@ def _convert_brat_spans(span: str) -> List[Optional[int]]:
         print("No span found.")
         return [None, None]
     return [span_start, span_end]
-
-
-def convert_brat_to_pandas(brat_dir: str, labels: List[str]) -> pd.DataFrame:
-    """
-    Convert span to list with span_start, span_end.
-    It considers the new lines by adding one character.
-    """
-    df = extract_pandas(IN_BRAT_DIR=brat_dir)
-    df = df[df["label"].isin(labels)].drop_duplicates()
-
-    df[['span_start', 'span_end']] = df['span'].apply(_convert_brat_spans).tolist()
-    df["lexical_variant"] = df["term"].copy()
-
-    df_final = df[[
-        "term",
-        "lexical_variant",
-        "source",
-        "span_start",
-        "span_end",
-        "label"
-    ]]
-
-    return df_final
-
 
 def match_bio_to_biocomp(
     df_bio: pd.DataFrame,

@@ -16,8 +16,8 @@ def run(config_path: str):
     config = OmegaConf.load(config_path)
 
     script_config: Dict[str, Any] = config["script"] # type: ignore
-    brat_dirs: List[str] = script_config["brat_dirs"]
-    output_dirs: List[str] = script_config["output_dirs"]
+    brat_dirs: List[str] = script_config["data_paths"]
+    output_dirs: List[str] = script_config["output_paths"]
 
     for brat_dir, output_dir in zip(brat_dirs, output_dirs):
         bio_post_processing(script_config, brat_dir, output_dir)
