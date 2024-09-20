@@ -3,6 +3,8 @@ from typing import List, Optional, Union
 
 import edsnlp
 import pandas as pd
+import spacy
+import torch
 import typer
 from spacy.tokens import Doc
 
@@ -82,6 +84,14 @@ def extract_ents_from_docs(
 
     docs = docs.map_pipeline(nlp)
 
+    if torch.cuda.is_available():
+        print("Using GPU")
+        docs = docs.set_processing(
+            num_cpu_workers=10,
+            num_gpu_workers=2,
+            batch_size=100_000,
+        )
+
     def converter_with_attributes(doc: Doc):
         return convert_doc_to_dict(doc, attributes=attributes)
 
@@ -98,6 +108,11 @@ def main(
 ) -> pd.DataFrame:
     try:
         from biomedics.ner.loaders import eds_biomedic
+        if torch.cuda.is_available():
+            print("Using GPU")
+            spacy.require_gpu()
+
+        print("Using EDS-Biomedic")
         nlp = eds_biomedic()
     except ImportError:
         print("EDS-Biomedic not found, using default model")
@@ -108,7 +123,6 @@ def main(
     if output_path:
         df_ents.to_parquet(
             output_path + ".parquet",
-            mode="overwrite",
             engine="pyarrow",
             compression="snappy"
         )
