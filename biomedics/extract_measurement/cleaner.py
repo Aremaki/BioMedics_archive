@@ -315,10 +315,9 @@ def extract_clean_non_digit_value(df: pd.DataFrame) -> pd.DataFrame:
 
     df_non_digit_val["non_digit_value"] = df_non_digit_val[
         "lexical_variant_stripped"
-    ].str.extract(
-        f"({pattern_non_digit_val})",
-        expand=False
-    )
+    ].str.findall(pattern_non_digit_val)
+    df_non_digit_val = df_non_digit_val.explode(["non_digit_value"])
+    
     df_non_digit_val["non_digit_value"] = df_non_digit_val[
         "non_digit_value"
     ].str.replace(r"[^\w+-]", "", regex=True)
@@ -511,9 +510,8 @@ def extract_clean_subsequent_lex_var(df: pd.DataFrame) -> pd.DataFrame:
     df_subs_lex_var["lexical_variant"] = np.where(
         df_subs_lex_var["lexical_variant_bio"] != "",
         df_subs_lex_var["lexical_variant_bio"],
-        df_subs_lex_var["lexical_variant_stripped"].str.extract(
+        df_subs_lex_var["lexical_variant_stripped"].str.findall(
             pattern_sub_lexical_var,
-            expand=False
         )
     )
 
@@ -523,7 +521,7 @@ def extract_clean_subsequent_lex_var(df: pd.DataFrame) -> pd.DataFrame:
     ].str.lower()
     translation_table = str.maketrans(
         'ãäöüáàäčçďéêěèïíîĺľňóôřšťúûůýž',
-        'aaouaaaccdeeeeiiillnorstuuuyz'
+        'aaouaaaccdeeeeiiillnoorstuuuyz'
     )
     df_subs_lex_var["lexical_variant"] = df_subs_lex_var[
         "lexical_variant"
